@@ -1,0 +1,4 @@
+node_modules/
+dist/
+.ln3d-data/
+.env*
