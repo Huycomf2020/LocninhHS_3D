@@ -1,3 +1,4 @@
+import {execFile} from 'node:child_process';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -75,7 +76,7 @@ async function api(req,res,url){
  fail(404,'Không tìm thấy.');
 }
 const root=path.resolve('dist'),types={'.js':'text/javascript','.css':'text/css','.html':'text/html; charset=utf-8','.jpg':'image/jpeg','.wav':'audio/wav'};
-http.createServer(async(req,res)=>{try{
+const server=http.createServer(async(req,res)=>{try{
  const url=new URL(req.url,'http://localhost');
  if(url.pathname.startsWith('/api/')){res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type','application/json; charset=utf-8');res.end(JSON.stringify(await api(req,res,url)));return;}
  const target=path.resolve(root,'.'+(url.pathname==='/'?'/index.html':url.pathname));
@@ -83,4 +84,13 @@ http.createServer(async(req,res)=>{try{
  const data=await fs.promises.readFile(target);
  res.setHeader('Content-Type',types[path.extname(target)]||'application/octet-stream');res.end(data);
  }catch(e){const status=e.status||(e.code==='ENOENT'?404:500);if(status===500)console.error(e);res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'});res.end(JSON.stringify({error:status===500?'Lỗi máy chủ.':e.message}));}
-}).listen(Number(process.env.PORT||4174),process.env.HOST||'127.0.0.1',()=>console.log('LN3d · http://127.0.0.1:'+(process.env.PORT||4174)));
+});
+server.listen(Number(process.env.PORT||4174),process.env.HOST||'127.0.0.1',()=>{
+ const url='http://127.0.0.1:'+server.address().port+'/';
+ console.log('LN3d · '+url);
+ if(process.argv.includes('--open')&&process.platform==='win32'){
+   execFile('rundll32.exe',['url.dll,FileProtocolHandler',url],error=>{
+     if(error)console.log('Mo dia chi nay trong trinh duyet: '+url);
+   });
+ }
+});

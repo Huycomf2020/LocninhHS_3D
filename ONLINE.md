@@ -4,6 +4,8 @@ Từ LN3d, mở bản đồ, chọn Cà phê Xanh và đến vị trí. Mở th�
 
 ## Chạy
 
+Trên Windows, nếu đã có thư mục dist, nhấp đúp Mo-demo.cmd. Tệp sẽ mở tab mới tại cổng trống. Giữ cửa sổ lệnh mở trong lúc sử dụng. Tài khoản dùng biệt danh và mật khẩu từ 8 ký tự.
+
 ```sh
 npm ci
 npm run build

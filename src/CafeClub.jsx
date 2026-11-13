@@ -3,7 +3,7 @@ import {checked,legal} from './xiangqi';
 
 export async function request(route,data){
  const res=await fetch('/api/'+route,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
- if(!res.headers.get('Content-Type')?.includes('json'))throw Error('Hãy mở LN3d bằng máy chủ Node.');
+ if(!res.headers.get('Content-Type')?.includes('json'))throw Error('Hãy đóng trang này, mở Mo-demo.cmd trong thư mục LN3d và dùng tab mới được mở tự động.');
  const result=await res.json();if(!res.ok)throw Error(result.error);return result;
 }
 const glyph={r:{k:'帥',a:'仕',e:'相',h:'傌',r:'俥',c:'炮',p:'兵'},b:{k:'將',a:'士',e:'象',h:'馬',r:'車',c:'砲',p:'卒'}};
@@ -22,8 +22,9 @@ export default function CafeClub({data,refresh,error,setError}){
   <h2>Cà phê Xanh trực tuyến</h2>
   {error&&<p role="alert">{error}</p>}{notice&&<p role="status">{notice}</p>}
   {!user?<form className="club-form" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);act('auth',{name:f.get('name'),password:f.get('password'),register:e.nativeEvent.submitter?.value==='new'});}}>
-    <label>Tên hiển thị<input name="name" autoComplete="username" minLength="3" maxLength="28" required/></label>
-    <label>Mật khẩu<input name="password" type="password" autoComplete="current-password" minLength="8" maxLength="128" required/></label>
+    <label>Tên đăng nhập<input name="name" placeholder="Ví dụ: HuyLocNinh" aria-describedby="login-name-help" autoComplete="username" minLength="3" maxLength="28" required/></label>
+    <small id="login-name-help">Dùng biệt danh từ 3 đến 28 ký tự. Nếu lần đầu vào quán, chọn Tạo tài khoản.</small>
+    <label>Mật khẩu<input name="password" type="password" placeholder="Ít nhất 8 ký tự" autoComplete="current-password" minLength="8" maxLength="128" required/></label>
     <div className="place-actions"><button className="header-button map-button" disabled={busy}>Đăng nhập</button><button className="header-button" disabled={busy} value="new">Tạo tài khoản</button></div>
   </form>:<>
     <div className="seat-row"><strong>{user.name}</strong><button className="header-button" disabled={busy} onClick={()=>act('logout',{})}>Đăng xuất</button></div>
